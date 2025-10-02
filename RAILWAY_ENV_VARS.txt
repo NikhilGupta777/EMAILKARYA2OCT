@@ -1,0 +1,147 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🚂 RAILWAY ENVIRONMENT VARIABLES - COPY & PASTE
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Instructions:
+# 1. Go to Railway Dashboard → Your Service → Variables tab
+# 2. Click "Raw Editor"
+# 3. Copy the variables below (update with your values)
+# 4. Paste into Railway
+# 5. Click "Save"
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────────────────────────────────
+# 🔴 REQUIRED VARIABLES (Must be set)
+# ───────────────────────────────────────────────────────────────────────────
+
+# Database URL (Auto-set by Railway PostgreSQL - DO NOT CHANGE)
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+
+# SendGrid API Key (Get from: https://app.sendgrid.com/settings/api_keys)
+SENDGRID_API_KEY=SG.your_sendgrid_api_key_here
+
+# JWT Secret (Generate a random 32+ character string)
+# Example: openssl rand -hex 32
+JWT_SECRET=your_secure_random_string_at_least_32_characters_long
+
+# ───────────────────────────────────────────────────────────────────────────
+# 🟡 IMPORTANT VARIABLES (Set after first deploy)
+# ───────────────────────────────────────────────────────────────────────────
+
+# CORS Origins (Update with your Railway domain after first deploy)
+# Example: https://your-app.railway.app
+ALLOWED_ORIGINS=https://your-app.railway.app
+
+# Base URL (Update with your Railway domain after first deploy)
+# Example: https://your-app.railway.app
+BASE_URL=https://your-app.railway.app
+
+# ───────────────────────────────────────────────────────────────────────────
+# 🟢 OPTIONAL VARIABLES (For additional features)
+# ───────────────────────────────────────────────────────────────────────────
+
+# Google OAuth (Optional - for Google login)
+# Get from: https://console.cloud.google.com/apis/credentials
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+
+# Perplexity AI (Optional - for AI email generation)
+# Get from: https://www.perplexity.ai/settings/api
+PERPLEXITY_API_KEY=pplx-your_perplexity_api_key_here
+
+# ───────────────────────────────────────────────────────────────────────────
+# ⚙️ SYSTEM VARIABLES (Auto-set by Railway - DO NOT CHANGE)
+# ───────────────────────────────────────────────────────────────────────────
+
+# Port (Railway sets this automatically)
+PORT=8000
+
+# Host (Should be 0.0.0.0 for Railway)
+HOST=0.0.0.0
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 📋 QUICK CHECKLIST
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Before deploying, make sure you have:
+#
+# ✅ Set DATABASE_URL (auto-set by Railway PostgreSQL)
+# ✅ Set SENDGRID_API_KEY (from SendGrid dashboard)
+# ✅ Set JWT_SECRET (random 32+ character string)
+# ✅ Set ALLOWED_ORIGINS (after first deploy)
+# ✅ Set BASE_URL (after first deploy)
+# ✅ (Optional) Set Google OAuth credentials
+# ✅ (Optional) Set Perplexity API key
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔐 SECURITY NOTES
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# 1. JWT_SECRET: Use a strong random string (32+ characters)
+#    Generate with: openssl rand -hex 32
+#
+# 2. SENDGRID_API_KEY: Keep this secret, never commit to Git
+#    Ensure it has "Mail Send" permissions in SendGrid
+#
+# 3. DATABASE_URL: Railway sets this automatically
+#    It includes SSL by default (?sslmode=require)
+#
+# 4. ALLOWED_ORIGINS: Restrict to your domain only
+#    Don't use "*" in production
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 📝 EXAMPLE CONFIGURATION (After First Deploy)
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# DATABASE_URL=${{Postgres.DATABASE_URL}}
+# SENDGRID_API_KEY=SG.abc123xyz789...
+# JWT_SECRET=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+# ALLOWED_ORIGINS=https://my-email-app.railway.app
+# BASE_URL=https://my-email-app.railway.app
+# GOOGLE_CLIENT_ID=123456789-abc.apps.googleusercontent.com
+# GOOGLE_CLIENT_SECRET=GOCSPX-abc123xyz789
+# PERPLEXITY_API_KEY=pplx-abc123xyz789
+# PORT=8000
+# HOST=0.0.0.0
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 🆘 TROUBLESHOOTING
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Network Error / CORS Error:
+#   → Make sure ALLOWED_ORIGINS and BASE_URL are set to your Railway domain
+#   → Example: https://your-app.railway.app
+#
+# Database Connection Failed:
+#   → Check DATABASE_URL is set (should be auto-set by Railway)
+#   → Ensure it has ?sslmode=require
+#
+# SendGrid 403 Error:
+#   → Verify API key has "Mail Send" permissions
+#   → Verify sender email is verified in SendGrid
+#
+# App Crashes on Startup:
+#   → Check Railway logs for error messages
+#   → Verify all required variables are set
+#   → Run locally: python debug_railway.py
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 📚 DOCUMENTATION
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Quick Deploy:        QUICK_DEPLOY.md
+# Full Guide:          RAILWAY_DEPLOYMENT.md
+# Checklist:           DEPLOYMENT_CHECKLIST.md
+# Fixes Applied:       FIXES_APPLIED.md
+# Debug Tool:          python debug_railway.py
+#
+# ═══════════════════════════════════════════════════════════════════════════

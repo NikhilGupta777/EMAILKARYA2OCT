@@ -26,8 +26,10 @@ JWT_SECRET = os.getenv("JWT_SECRET")
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://localhost:8000,https://127.0.0.1:8000").split(",")
-BASE_URL = os.getenv("BASE_URL", "https://localhost:8000")
+# Railway deployment: Allow both local and production origins
+ALLOWED_ORIGINS_STR = os.getenv("ALLOWED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000")
+ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()]
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 
 # Validate critical environment variables
 if not JWT_SECRET:
@@ -145,12 +147,14 @@ async def log_requests(request: Request, call_next):
 
 from fastapi.middleware.cors import CORSMiddleware
 
+# CORS configuration - allow Railway domains and local development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS else ["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 app.add_middleware(
@@ -2362,6 +2366,15 @@ async def send_email(email_request: EmailRequest, db: Session = Depends(get_db),
 # Serve frontend - mount static files with lower priority so API routes take precedence
 from fastapi.responses import FileResponse
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Railway and monitoring"""
+    return {
+        "status": "healthy",
+        "service": "email-management-api",
+        "version": "1.0.0"
+    }
+
 @app.get("/")
 async def read_root():
     return FileResponse("index.html", media_type="text/html")
@@ -2370,4 +2383,7 @@ async def read_root():
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8000)
+    # Railway provides PORT environment variable
+    port = int(os.getenv("PORT", 8000))
+    host = os.getenv("HOST", "0.0.0.0")
+    uvicorn.run(app, host=host, port=port)
